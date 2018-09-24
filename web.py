@@ -29,6 +29,7 @@ def visible(element):
    if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
       return False
    elif re.match('<!--.*-->', str(element.encode('utf-8'))):
+   # elif re.match('<!--.*-->'.encode('utf-8'), element.encode('utf-8')):
       return False
    return True
 
@@ -41,10 +42,10 @@ def scrapeUrls(links):
       urlText = ' '.join(list(textIter))
       with open(ind, 'w') as writeFile:
          print(url)
-         print(urlText)
-         writeFile.write(urlText)
+         print(urlText.encode('utf-8'))
+         writeFile.write(str(urlText.encode('utf-8')))
 
-with open('myurls.txt', 'r') as f:
-   mylist = [re.sub('\n','',line) for line in f]
+with open('myurls.txt', 'r') as linksFile:
+   mylist = [re.sub('\n','',line) for line in linksFile]
    print(mylist)
    scrapeUrls(mylist)
