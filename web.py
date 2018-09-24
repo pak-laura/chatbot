@@ -1,7 +1,10 @@
 # ??
 
 from bs4 import BeautifulSoup
+import urllib.request
+import re
 import requests
+
 
 # starter_url = "https://travel.usnews.com/rankings/worlds-best-vacations/"
 starter_url = "https://www.britannica.com/place/Turkey"
@@ -17,8 +20,31 @@ with open('urls.txt', 'w') as f:
    for link in soup.find_all('a'):
       link_str = str(link.get('href'))
       if 'Turkey' in link_str:
-         print(link.get('href'))
          f.write(str(link.get('href')) + '\n\n')
 
 # end of program
 print("end of crawler")
+
+def visible(element):
+   if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+      return False
+   elif re.match('<!--.*-->', str(element.encode('utf-8'))):
+      return False
+   return True
+
+def scrapeUrls(links):
+   for ind, url in enumerate(links):
+      html = urllib.request.urlopen(url)
+      soup = BeautifulSoup(html, 'lxml')
+      data = soup.findAll(text = True)
+      textIter = filter(visible, data)
+      urlText = ' '.join(list(textIter))
+      with open(ind, 'w') as writeFile:
+         print(url)
+         print(urlText)
+         writeFile.write(urlText)
+
+with open('myurls.txt', 'r') as f:
+   mylist = [re.sub('\n','',line) for line in f]
+   print(mylist)
+   scrapeUrls(mylist)
