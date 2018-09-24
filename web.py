@@ -33,6 +33,7 @@ def visible(element):
       return False
    return True
 
+# scrape text from list of urls
 def scrapeUrls(links):
    for ind, url in enumerate(links):
       html = urllib.request.urlopen(url)
@@ -43,8 +44,10 @@ def scrapeUrls(links):
       with open(ind, 'w') as writeFile:
          print(url)
          print(urlText.encode('utf-8'))
+         # this part isn't working haha
          writeFile.write(str(urlText.encode('utf-8')))
 
+# calling scrapeUrls and passing a list from a random dev file
 with open('myurls.txt', 'r') as linksFile:
    mylist = [re.sub('\n','',line) for line in linksFile]
    print(mylist)
