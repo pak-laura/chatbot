@@ -45,11 +45,12 @@ def scrapeUrls(links):
       data = soup.findAll(text = True)
       textIter = filter(visible, data)
       urlText = ' '.join(list(textIter))
-      with open(ind, 'w') as writeFile:
+      with open(str(ind), 'w') as writeFile:
          print(url)
          print(urlText.encode('utf-8'))
          # this part isn't working haha
          writeFile.write(str(urlText.encode('utf-8')))
+
 
 def main():
    #return list of 15 relevant urls
