@@ -39,23 +39,33 @@ def visible(element):
 
 # scrape text from list of urls
 def scrapeUrls(links):
+   fileNames = []
    for ind, url in enumerate(links):
       html = urllib.request.urlopen(url)
       soup = BeautifulSoup(html, 'lxml')
       data = soup.findAll(text = True)
       textIter = filter(visible, data)
       urlText = ' '.join(list(textIter))
-      with open(str(ind), 'w') as writeFile:
-         print(url)
-         print(urlText.encode('utf-8'))
-         # this part isn't working haha
+      with open(str(ind)+'_in', 'w') as writeFile:
          writeFile.write(str(urlText.encode('utf-8')))
+      fileNames.append(str(ind)+'_in')
+   return fileNames
+
+# func to clean text
+def cleanText(files):
+   # loop inside file to prevent calling again & again
+   for ind, f in enumerate(files):
+      currFile = open(f, 'r')
+      fileString = currFile.read().replace('\n', ' ')
+      with open(str(ind)+'_out', 'w') as writeFile:
+         writeFile.write(fileString)
 
 
 def main():
    #return list of 15 relevant urls
    mainUrls = mainUrl()
-   scrapeUrls(mainUrls)
+   filesIn = scrapeUrls(mainUrls)
+   cleanText(filesIn)
 
 if __name__ == '__main__':
     main()

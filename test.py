@@ -14,8 +14,7 @@ def visible(element):
       return False
    return True
 
-'''# url = 'https://www.fanfiction.net/s/8821847/1/All-Was-Not-Well'
-url = 'https://www.congress.gov/congressional-record/2018/9/18/senate-section/article/S6210-2'
+'''url = 'https://www.congress.gov/congressional-record/2018/9/18/senate-section/article/S6210-2'
 html = urllib.request.urlopen(url)
 soup = BeautifulSoup(html, 'lxml')
 data = soup.findAll(text = True)
