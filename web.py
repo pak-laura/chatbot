@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 import urllib.request
 import re
 import requests
+import nltk
+from nltk import sent_tokenize
 
 def mainUrl():
     starter_url = "https://www.britannica.com/place/Turkey"
@@ -56,9 +58,19 @@ def cleanText(files):
    # loop inside file to prevent calling again & again
    for ind, f in enumerate(files):
       currFile = open(f, 'r')
-      fileString = currFile.read().replace('\n', ' ')
+      fileString = currFile.read().replace('\\n', '')
+      fileString = fileString.replace('\\t', '')
+      fileString = fileString.replace('\\r', '')
+      fileString = re.sub(r'\s', ' ', fileString)
+      # fileString = re.sub('\x[0-9a-zA-Z][0-9a-zA-Z]', ' ', fileString)
+      print(fileString[:500])
+      print('-----------------------------')
+      print('-----------------------------')
+      print('-----------------------------')
+      sents = nltk.sent_tokenize(fileString)
+      print(sents[:10])
       with open(str(ind)+'_out', 'w') as writeFile:
-         writeFile.write(fileString)
+         writeFile.write(' '.join(sents))
 
 
 def main():
