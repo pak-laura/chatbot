@@ -1,3 +1,7 @@
+# Names: Maliha Haque and Laura Pak
+# Date: 9/30/18
+# Assignment: Webcrwaler- Project Part 1
+# Class: CS 4301: Introduction to Natural Language Processing
 
 
 from bs4 import BeautifulSoup
@@ -5,8 +9,11 @@ import urllib.request
 import re
 import requests
 import nltk
-from nltk import sent_tokenize
+from nltk import sent_tokenize, word_tokenize, FreqDist
+from nltk.corpus import stopwords
+import string
 
+#starter url and get 15 relvant urls
 def mainUrl():
     starter_url = "https://www.britannica.com/place/Turkey"
     r = requests.get(starter_url)
@@ -15,6 +22,8 @@ def mainUrl():
 
     mainUrls = set()
     urlCount = 0
+    
+    #get 15 relevant urls
     for link in soup.find_all('a'):
         link_str = str(link.get('href'))
         if 'Turkey' in link_str or 'turkey' in link_str:
@@ -25,10 +34,6 @@ def mainUrl():
                 if link_str.startswith("https:") and urlCount < 7 and len(mainUrls) < 15:
                     urlCount += 1
                     mainUrls.add(str(link.get('href')))
-                
-    print (mainUrls)
-    print(len(mainUrls))
-    print("end of crawler")
     return(mainUrls)
 
 def visible(element):
@@ -53,8 +58,11 @@ def scrapeUrls(links):
       fileNames.append(str(ind)+'_in')
    return fileNames
 
-# func to clean text
+
+# clean text
 def cleanText(files):
+   tokensAll = []
+   sents = []
    # loop inside file to prevent calling again & again
    for ind, f in enumerate(files):
       currFile = open(f, 'r')
@@ -62,22 +70,57 @@ def cleanText(files):
       fileString = fileString.replace('\\t', '')
       fileString = fileString.replace('\\r', '')
       fileString = re.sub(r'\s', ' ', fileString)
-      # fileString = re.sub('\x[0-9a-zA-Z][0-9a-zA-Z]', ' ', fileString)
-      print(fileString[:500])
-      print('-----------------------------')
-      print('-----------------------------')
-      print('-----------------------------')
-      sents = nltk.sent_tokenize(fileString)
-      print(sents[:10])
+      fileString = re.sub('[^A-Za-z\.]+', ' ', fileString.lower())
+      sents += nltk.sent_tokenize(fileString)
+      fileString = re.sub('[^A-Za-z]+', ' ', fileString.lower())
+      #print(fileString[:500])
+      #print('-----------------------------')
+      #print('-----------------------------')
+      #print('-----------------------------')
+      tokens = word_tokenize(fileString)
+      #print("tokens after tokenizing: ", tokens)
+      tokensAll += [word for word in tokens if word not in stopwords.words('english') and word not in string.punctuation]
       with open(str(ind)+'_out', 'w') as writeFile:
          writeFile.write(' '.join(sents))
+   return tokensAll, sents
+
+
+# find top terms and build knowledge base
+def topTerms(tokens, sents):
+    
+    badWords = ['x', 'xc', 'xe', 'xa', 'xb', 'dia', 'p', 'britannica']
+    termDict = {}
+    tokens = [word for word in tokens if word not in badWords]
+    lenght = len(set(tokens))
+
+    #find fdist for words to get most common terms
+    fdist = FreqDist(tokens)
+    print(fdist.most_common(40))
+    for i,p in fdist.most_common(lenght):
+        termDict[i] = p
+
+    #build knowledge base with top terms
+    topTerms = ['turkey', 'history', 'population', 'istanbul', 'people', 'life', 'arts', 'education', 'government', 'social'] 
+    with open('knowledge_base', 'w+') as writeFile:
+        for term in topTerms:
+            for sent in sents:
+                if term in sent:
+                        writeFile.write(term + "-- " + sent + "\n")
+
 
 
 def main():
    #return list of 15 relevant urls
    mainUrls = mainUrl()
-   filesIn = scrapeUrls(mainUrls)
-   cleanText(filesIn)
 
+   #scrape urls for text
+   filesIn = scrapeUrls(mainUrls)
+
+   #clean text
+   tokens, sents = cleanText(filesIn)
+
+   #get top terms and print knowledge base to file
+   topTerms(tokens, sents)
+  
 if __name__ == '__main__':
     main()
