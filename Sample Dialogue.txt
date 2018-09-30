@@ -1,0 +1,28 @@
+Sample 1
+
+Hi, I'm a chatbot that knows a lot about Turkey. Who are you?
+	I'm Anne.
+Hi, Anne. Do you like Turkey?
+	I like eating turkey.
+I mean Turkey, the country. Do you like Turkey?
+	I don't know.
+Do you like Angora cats? They are from Turkey.
+	I like cats!
+You might like Turkey.
+
+-----------------------------------------------------------------
+
+Sample 2
+
+Hi, I'm a chatbot that knows a lot about Turkey. Who are you?
+	My name is Anne.
+Hi, Anne. Do you like Turkey?
+	No.
+How unfortunate! Why not?
+	I hate the flamingoes in Turkey.
+I'm sorry to hear that. Maybe you would like the pheasants of Turkey instead.
+	I don't like pheasants either.
+How about the Tigris and Euphrates rivers?
+	Those are pretty cool.
+I'm glad you like them.
+

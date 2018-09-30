@@ -88,10 +88,16 @@ def cleanText(files):
 # find top terms and build knowledge base
 def topTerms(tokens, sents):
     
-    badWords = ['x', 'xc', 'xe', 'xa', 'xb', 'dia', 'p', 'britannica']
+    badWords = ['x', 'xc', 'xbcrk', 'xe', 'xa', 'xb', 'dia', 'p', 'britannica']
     termDict = {}
     tokens = [word for word in tokens if word not in badWords]
     lenght = len(set(tokens))
+    cleanSents = []
+    for sent in sents:
+        s = word_tokenize(sent)
+        e = [w for w in s if w not in badWords]
+        sent = ' '.join(e)
+        cleanSents.append(sent)
 
     #find fdist for words to get most common terms
     fdist = FreqDist(tokens)
@@ -103,7 +109,7 @@ def topTerms(tokens, sents):
     topTerms = ['turkey', 'history', 'population', 'istanbul', 'people', 'life', 'arts', 'education', 'government', 'social'] 
     with open('knowledge_base', 'w+') as writeFile:
         for term in topTerms:
-            for sent in sents:
+            for sent in cleanSents:
                 if term in sent:
                         writeFile.write(term + "-- " + sent + "\n")
 
