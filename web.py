@@ -73,12 +73,7 @@ def cleanText(files):
       fileString = re.sub('[^A-Za-z\.]+', ' ', fileString.lower())
       sents += nltk.sent_tokenize(fileString)
       fileString = re.sub('[^A-Za-z]+', ' ', fileString.lower())
-      #print(fileString[:500])
-      #print('-----------------------------')
-      #print('-----------------------------')
-      #print('-----------------------------')
       tokens = word_tokenize(fileString)
-      #print("tokens after tokenizing: ", tokens)
       tokensAll += [word for word in tokens if word not in stopwords.words('english') and word not in string.punctuation]
       with open(str(ind)+'_out', 'w') as writeFile:
          writeFile.write(' '.join(sents))
@@ -88,6 +83,7 @@ def cleanText(files):
 # find top terms and build knowledge base
 def topTerms(tokens, sents):
     
+    # clean a little more, get rid of weirdly encoded chars
     badWords = ['x', 'xc', 'xbcrk', 'xe', 'xa', 'xb', 'dia', 'p', 'britannica']
     termDict = {}
     tokens = [word for word in tokens if word not in badWords]
